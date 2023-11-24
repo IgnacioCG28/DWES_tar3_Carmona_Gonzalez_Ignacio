@@ -36,6 +36,6 @@ INSERT INTO pizzas (pizza, precio, coste, ingredientes) VALUES
 ('Four Cheese', 11.49, 5.50, 'Tomato sauce, mozzarella, parmesan, feta, gorgonzola'),
 ('Vegan Delight', 10.99, 4.75, 'Tomato sauce, vegan cheese, mushrooms, peppers, olives');
 
-
+ -- TODO: Finish DB
 
 
