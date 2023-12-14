@@ -3,7 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -15,7 +14,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if user is logged in
 session_start();
 $loggedIn = false;
 if (isset($_SESSION["username"])) {
@@ -23,14 +21,17 @@ if (isset($_SESSION["username"])) {
     $username = $_SESSION["username"];
 }
 
-// Logout functionality
+if ($loggedIn && $username == "admin") {
+    header("Location: zona_admin.php");
+    exit;
+}
+
 if (isset($_GET["logout"])) {
     session_destroy();
     header("Location: index.php");
     exit;
 }
 
-// Login form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
@@ -39,26 +40,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        // Successful login
         $row = $result->fetch_assoc();
         $_SESSION["username"] = $row["nombre"];
         $loggedIn = true;
         header("Location: index.php");
         exit;
     } else {
-        // Invalid credentials
         echo "Invalid username or password.";
     }
 }
-
-$conn->close();
 ?>
 
-<!-- index.php -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <?php if ($loggedIn) { ?>
@@ -73,18 +70,17 @@ $conn->close();
             <input type="password" id="password" name="password" required><br><br>
             <input type="submit" value="Login">
         </form>
-        <p>Don't have an account? <a href="new_user.php">Create one</a></p>
+        <p>Don't have an account? <a href="nuevo_usuario.php">Create one</a></p>
     <?php } ?>
 
     <h2>Menu</h2>
-    <table>
+    <table style="border: 1px solid black;">
         <tr>
             <th>Pizza</th>
             <th>Ingredients</th>
             <th>Price</th>
         </tr>
         <?php
-        // Database connection
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -96,7 +92,6 @@ $conn->close();
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // Fetch pizza data from database
         $sql = "SELECT * FROM pizzas";
         $result = $conn->query($sql);
 
@@ -111,14 +106,11 @@ $conn->close();
         } else {
             echo "No pizzas found.";
         }
-
-        $conn->close();
         ?>
-        <!-- Add more pizzas here -->
     </table>
 
     <?php if ($loggedIn) { ?>
-        <form action="place_order.php" method="POST">
+        <form action="pedido.php" method="POST">
             <input type="submit" value="Place Order">
         </form>
     <?php } ?>
