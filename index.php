@@ -1,4 +1,6 @@
 <?php
+
+// Github: https://github.com/IgnacioCG28/DWES_tar3_Carmona_Gonzalez_Ignacio.git
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
